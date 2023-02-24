@@ -1,17 +1,62 @@
 import React from 'react';
-import './User.css';
+import { TableCell, TableRow, Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    fetchDeleteUser,
+    fetchEditUser,
+    openModal,
+    setUser,
+    selectAllUsers,
+} from '../../reducers/usersReducer';
 
-const User = ({ user }) => {
+const User = ({ userData }) => {
+    const dispatch = useDispatch();
+    const { user } = useSelector(selectAllUsers);
+
+    const handleEditUser = () => {
+        dispatch(setUser(userData.id));
+        dispatch(openModal());
+        // dispatch(editUserInDatabase(userData.id, updatedUser));
+    };
+    const handleDeleteUser = () => {
+        dispatch(fetchDeleteUser(userData.id));
+    };
+
     return (
-        <div className="user-list">
-            <div className="user">
-                <div className="user__id">{user.id}</div>
-                <div className="user__name">{user.name}</div>
-                <div className="user__username">{user.username}</div>
-                <div className="user__email">{user.email}</div>
-                <div className="user__city">{user.address.city}</div>
-            </div>
-        </div>
+        <TableRow
+            key={userData.id}
+            sx={{
+                '&:last-child td, &:last-child th': {
+                    border: 0,
+                },
+            }}
+        >
+            <TableCell component="th" scope="row">
+                {userData.id}
+            </TableCell>
+            <TableCell>{userData?.name}</TableCell>
+            <TableCell>{userData?.username}</TableCell>
+            <TableCell>{userData?.email}</TableCell>
+            <TableCell>{userData?.address?.city}</TableCell>
+            <TableCell>
+                <Button
+                    color="warning"
+                    variant="contained"
+                    onClick={handleEditUser}
+                >
+                    Edit
+                </Button>
+            </TableCell>
+            <TableCell>
+                <Button
+                    color="error"
+                    variant="contained"
+                    onClick={handleDeleteUser}
+                >
+                    Delete
+                </Button>
+            </TableCell>
+        </TableRow>
     );
 };
 

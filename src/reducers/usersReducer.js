@@ -2,8 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     users: [],
+    user: null,
     isLoading: false,
     error: null,
+    isModalOpen: false,
 };
 
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
@@ -40,9 +42,9 @@ export const fetchAddUser = createAsyncThunk(
 
 export const fetchEditUser = createAsyncThunk(
     'user/editUser',
-    async (userId, updatedInfo) => {
+    async (updatedUser, updatedInfo) => {
         const response = await fetch(
-            `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${userId}`,
+            `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${updatedUser.id}`,
             {
                 method: 'PUT',
                 headers: {
@@ -82,7 +84,18 @@ export const fetchDeleteUser = createAsyncThunk(
 export const usersSlice = createSlice({
     name: 'users',
     initialState,
-    reducers: {},
+    reducers: {
+        openModal: (state) => {
+            state.isModalOpen = true;
+        },
+        closeModal: (state) => {
+            state.isModalOpen = false;
+            state.user = null;
+        },
+        setUser: (state, action) => {
+            state.user = state.users.find((user) => user.id === action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.pending, (state) => {
@@ -113,8 +126,26 @@ export const usersSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(fetchEditUser.fulfilled, (state, action) => {
+                const userObj = state.users.find(
+                    (obj) => obj.id === action.payload.id
+                );
+                const userIndex = state.users.indexOf(userObj);
+
+                // state.users[userIndex] = {
+                //     ...state.users[userIndex],
+                //     ...action.meta.arg.updatedInfo,
+                // };
+
+                // state.isLoading = false;
+                // state.users.push(action.payload);
+                // state.error = null;
+                state.users.push({ name: 'test' });
+
+                // state.users[userIndex] = { name: 'test' };
+
+                console.log(state.users);
                 state.isLoading = false;
-                console.log('co tu robic');
+                state.error = null;
             })
             .addCase(fetchEditUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -126,9 +157,8 @@ export const usersSlice = createSlice({
             .addCase(fetchDeleteUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.users = state.users.filter(
-                    (user) => user.id !== action.payload.id
+                    (user) => user.id !== action.meta.arg
                 );
-                console.log(state.users);
             })
             .addCase(fetchDeleteUser.rejected, (state, action) => {
                 state.isLoading = false;
@@ -137,8 +167,11 @@ export const usersSlice = createSlice({
     },
 });
 
-// export const {} = usersSlice.actions;
+export const { openModal, closeModal, setUser } = usersSlice.actions;
 
-// export const selectCount = (state) => state.counter.value;
+export const selectAllUsers = (state) => state.users;
+
+export const selectPostById = (state, userId) =>
+    state.posts.posts.find((user) => user.id === userId);
 
 export default usersSlice.reducer;
