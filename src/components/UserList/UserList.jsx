@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     Table,
     TableBody,
@@ -10,21 +10,14 @@ import {
     CircularProgress,
     Button,
 } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    fetchUsers,
-    openModal,
-    selectAllUsers,
-} from '../../reducers/usersReducer';
+import { useSelector } from 'react-redux';
+import { selectAllUsers } from '../../reducers/usersReducer';
 import User from '../User/User';
+import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
     const { users, isLoading, error } = useSelector(selectAllUsers);
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchUsers());
-    }, []);
+    const navigate = useNavigate();
 
     if (isLoading) {
         return <CircularProgress />;
@@ -40,7 +33,7 @@ const UserList = () => {
                 <Button
                     variant="contained"
                     onClick={() => {
-                        dispatch(openModal());
+                        navigate('/add');
                     }}
                 >
                     Add user

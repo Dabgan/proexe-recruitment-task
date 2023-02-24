@@ -45,12 +45,6 @@ const UsersModal = () => {
         setEmailError(false);
     };
 
-    const isEmailValid = (email) => {
-        const emailRegex =
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
-        return emailRegex.test(email);
-    };
-
     const cleanForm = () => {
         setName('');
         setEmail('');
@@ -65,12 +59,12 @@ const UsersModal = () => {
         if (!email) {
             return setEmailError('Email cannot be empty');
         }
-        if (!isEmailValid(email)) {
-            return setEmailError('Please enter a valid email address');
-        }
-        if (name && email && isEmailValid(email)) {
-            return { name, email };
-        }
+        // if (!isEmailValid(email)) {
+        //     return setEmailError('Please enter a valid email address');
+        // }
+        // if (name && email && isEmailValid(email)) {
+        //     return { name, email };
+        // }
     };
 
     const editUserInDatabase = (id, updatedUser) => async (dispatch) => {
@@ -87,13 +81,6 @@ const UsersModal = () => {
         if (user?.id) {
             dispatch(editUserInDatabase(user.id, { name, email }));
         } else {
-            dispatch(
-                fetchAddUser({
-                    id: Math.floor(Math.random() * 1000),
-                    name,
-                    email,
-                })
-            );
         }
 
         cleanForm();
@@ -106,44 +93,44 @@ const UsersModal = () => {
     };
 
     return (
-        <Modal open={isModalOpen} onClose={handleCloseModal} sx={style}>
-            <Box sx={style}>
-                <TextField
-                    label="Name"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    value={name}
-                    onChange={handleNameChange}
-                    error={!!nameError}
-                    helperText={nameError || ''}
-                />
-                <TextField
-                    label="Email"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    value={email}
-                    onChange={handleEmailChange}
-                    error={!!emailError}
-                    helperText={emailError || ''}
-                />
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSaveClick}
-                >
-                    Save
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleCloseModal}
-                >
-                    Cancel
-                </Button>
-            </Box>
-        </Modal>
+        // <Modal open={isModalOpen} onClose={handleCloseModal} sx={style}>
+        <Box sx={style}>
+            <TextField
+                label="Name"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                value={name}
+                onChange={handleNameChange}
+                error={!!nameError}
+                helperText={nameError || ''}
+            />
+            <TextField
+                label="Email"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                value={email}
+                onChange={handleEmailChange}
+                error={!!emailError}
+                helperText={emailError || ''}
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSaveClick}
+            >
+                Save
+            </Button>
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleCloseModal}
+            >
+                Cancel
+            </Button>
+        </Box>
+        // </Modal>
     );
 };
 

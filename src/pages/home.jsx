@@ -5,9 +5,7 @@ import UsersModal from './../components/UsersModal/UsersModal';
 const Home = () => {
     return (
         <div>
-            <h1>Dashboard</h1>
             <UserList></UserList>
-            <UsersModal></UsersModal>
         </div>
     );
 };
