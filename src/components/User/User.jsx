@@ -11,52 +11,55 @@ import {
 
 const User = ({ userData }) => {
     const dispatch = useDispatch();
-    const { user } = useSelector(selectAllUsers);
+    const { user } = useSelector((state) => state.users);
 
     const handleEditUser = () => {
-        dispatch(setUser(userData.id));
-        dispatch(openModal());
+        // dispatch(setUser(userData.id));
+        // dispatch(openModal());
         // dispatch(editUserInDatabase(userData.id, updatedUser));
     };
     const handleDeleteUser = () => {
-        dispatch(fetchDeleteUser(userData.id));
+        dispatch(setUser(userData.id));
+        dispatch(openModal());
     };
 
     return (
-        <TableRow
-            key={userData.id}
-            sx={{
-                '&:last-child td, &:last-child th': {
-                    border: 0,
-                },
-            }}
-        >
-            <TableCell component="th" scope="row">
-                {userData.id}
-            </TableCell>
-            <TableCell>{userData?.name}</TableCell>
-            <TableCell>{userData?.username}</TableCell>
-            <TableCell>{userData?.email}</TableCell>
-            <TableCell>{userData?.address?.city}</TableCell>
-            <TableCell>
-                <Button
-                    color="warning"
-                    variant="contained"
-                    onClick={handleEditUser}
-                >
-                    Edit
-                </Button>
-            </TableCell>
-            <TableCell>
-                <Button
-                    color="error"
-                    variant="contained"
-                    onClick={handleDeleteUser}
-                >
-                    Delete
-                </Button>
-            </TableCell>
-        </TableRow>
+        <>
+            <TableRow
+                key={userData.id}
+                sx={{
+                    '&:last-child td, &:last-child th': {
+                        border: 0,
+                    },
+                }}
+            >
+                <TableCell component="th" scope="row">
+                    {userData.id}
+                </TableCell>
+                <TableCell>{userData?.name}</TableCell>
+                <TableCell>{userData?.username}</TableCell>
+                <TableCell>{userData?.email}</TableCell>
+                <TableCell>{userData?.address?.city}</TableCell>
+                <TableCell>
+                    <Button
+                        color="warning"
+                        variant="contained"
+                        onClick={handleEditUser}
+                    >
+                        Edit
+                    </Button>
+                </TableCell>
+                <TableCell>
+                    <Button
+                        color="error"
+                        variant="contained"
+                        onClick={handleDeleteUser}
+                    >
+                        Delete
+                    </Button>
+                </TableCell>
+            </TableRow>
+        </>
     );
 };
 

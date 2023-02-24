@@ -14,9 +14,10 @@ import { useSelector } from 'react-redux';
 import { selectAllUsers } from '../../reducers/usersReducer';
 import User from '../User/User';
 import { useNavigate } from 'react-router-dom';
+import DeleteModal from '../DeleteModal/DeleteModal';
 
 const UserList = () => {
-    const { users, isLoading, error } = useSelector(selectAllUsers);
+    const { users, isLoading, error } = useSelector((state) => state.users);
     const navigate = useNavigate();
 
     if (isLoading) {
@@ -60,6 +61,7 @@ const UserList = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <DeleteModal />
         </>
     );
 };

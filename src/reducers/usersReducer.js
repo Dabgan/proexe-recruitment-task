@@ -167,11 +167,9 @@ export const usersSlice = createSlice({
     },
 });
 
-export const { openModal, closeModal, setUser } = usersSlice.actions;
+export const { openModal, closeModal, setUser, getUser } = usersSlice.actions;
 
-export const selectAllUsers = (state) => state.users;
-
-export const selectPostById = (state, userId) =>
-    state.posts.posts.find((user) => user.id === userId);
+// export const selectPostById = (state, userId) =>
+//     state.posts.posts.find((user) => user.id === userId);
 
 export default usersSlice.reducer;
