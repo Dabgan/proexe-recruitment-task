@@ -34,17 +34,24 @@ const UserList = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: '40px',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    marginBottom: 2,
                 }}
             >
-                <Button variant="contained" onClick={handleNavigateAdd}>
+                <h3>User List</h3>
+                <Button
+                    variant="contained"
+                    onClick={handleNavigateAdd}
+                    sx={{ marginLeft: 'auto' }}
+                >
                     Add user
                 </Button>
                 <Button
                     color="secondary"
                     variant="contained"
                     onClick={handleSortUsers}
+                    sx={{ marginLeft: 3 }}
                 >
                     Sort by Username
                 </Button>
