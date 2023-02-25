@@ -38,23 +38,31 @@ const DeleteModal = () => {
     };
 
     return (
-        <Modal open={isModalOpen} onClose={handleCloseModal} sx={style}>
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
             <Box sx={style}>
-                <h2>Are you sure you want to delete this user? {user?.name}</h2>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleDeleteUser}
+                <h2>Are you sure you want to delete {user?.name}?</h2>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}
                 >
-                    Delete
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleCloseModal}
-                >
-                    Cancel
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleDeleteUser}
+                    >
+                        Delete
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleCloseModal}
+                    >
+                        Cancel
+                    </Button>
+                </Box>
             </Box>
         </Modal>
     );
