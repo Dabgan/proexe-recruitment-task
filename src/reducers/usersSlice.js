@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { API_URL, fetchApi } from '../api/users';
 
 const initialState = {
     users: [],
@@ -9,76 +10,32 @@ const initialState = {
     isAscending: true,
 };
 
-export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
-    const response = await fetch(
-        'https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data'
-    );
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-    }
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+    const data = await fetchApi(API_URL, 'GET');
     return data;
 });
 
 export const fetchAddUser = createAsyncThunk(
-    'user/addUser',
+    'users/addUser',
     async (newUser) => {
-        const response = await fetch(
-            'https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newUser),
-            }
-        );
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
-        }
+        const data = await fetchApi(API_URL, 'POST', newUser);
         return data;
     }
 );
 
 export const fetchEditUser = createAsyncThunk(
-    'user/editUser',
-    async (updatedUser, updatedInfo) => {
-        const response = await fetch(
-            `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${updatedUser.id}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ updatedInfo }),
-            }
-        );
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
-        }
+    'users/editUser',
+    async ({ id, updatedInfo }) => {
+        const data = await fetchApi(`${API_URL}/${id}`, 'PUT', updatedInfo);
         return data;
     }
 );
 
 export const fetchDeleteUser = createAsyncThunk(
-    'user/deleteUser',
-    async (userId) => {
-        const response = await fetch(
-            `https://my-json-server.typicode.com/karolkproexe/jsonplaceholderdb/data/${userId}`,
-            {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }
-        );
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong');
-        }
-        return data;
+    'users/deleteUser',
+    async (id) => {
+        await fetchApi(`${API_URL}/${id}`, 'DELETE');
+        return id;
     }
 );
 
@@ -99,9 +56,9 @@ export const usersSlice = createSlice({
         sortUsers: (state) => {
             state.users.sort((a, b) => {
                 if (state.isAscending) {
-                    return a.username.localeCompare(b.username);
+                    return a.username?.localeCompare(b.username);
                 } else {
-                    return b.username.localeCompare(a.username);
+                    return b.username?.localeCompare(a.username);
                 }
             });
             state.isAscending = !state.isAscending;
@@ -109,32 +66,15 @@ export const usersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUsers.pending, (state) => {
-                state.isLoading = true;
-            })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.users = action.payload;
                 state.error = null;
             })
-            .addCase(fetchUsers.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.error.message;
-            })
-            .addCase(fetchAddUser.pending, (state) => {
-                state.isLoading = true;
-            })
             .addCase(fetchAddUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.users.push(action.payload);
                 state.error = null;
-            })
-            .addCase(fetchAddUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.error.message;
-            })
-            .addCase(fetchEditUser.pending, (state) => {
-                state.isLoading = true;
             })
             .addCase(fetchEditUser.fulfilled, (state, action) => {
                 state.isLoading = false;
@@ -152,23 +92,25 @@ export const usersSlice = createSlice({
                 state.users = changedUsers;
                 state.error = null;
             })
-            .addCase(fetchEditUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.error.message;
-            })
-            .addCase(fetchDeleteUser.pending, (state) => {
-                state.isLoading = true;
-            })
             .addCase(fetchDeleteUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.users = state.users.filter(
                     (user) => user.id !== action.meta.arg
                 );
             })
-            .addCase(fetchDeleteUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.error = action.error.message;
-            });
+            .addMatcher(
+                (action) => action.type.endsWith('/pending'),
+                (state) => {
+                    state.isLoading = true;
+                }
+            )
+            .addMatcher(
+                (action) => action.type.endsWith('/rejected'),
+                (state, action) => {
+                    state.isLoading = false;
+                    state.error = action.error.message;
+                }
+            );
     },
 });
 

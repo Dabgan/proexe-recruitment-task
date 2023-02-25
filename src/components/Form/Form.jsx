@@ -21,6 +21,7 @@ const Form = ({ userData }) => {
         try {
             dispatch(fetchEditUser({ id, updatedUser }));
         } catch (error) {
+            console.log('poszlo?');
             console.error(error);
         }
     };
