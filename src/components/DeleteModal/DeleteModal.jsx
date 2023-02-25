@@ -2,7 +2,6 @@ import { Box, Button, Modal } from '@mui/material';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useUserActions } from '../../hooks/useUserActions';
-import { findUserById } from '../../reducers/usersSlice';
 
 const style = {
     position: 'absolute',
@@ -17,11 +16,10 @@ const style = {
 };
 
 const DeleteModal = () => {
-    const { currentUserId, isModalOpen, users } = useSelector(
-        (state) => state.users
-    );
-    const { handleDeleteUser, handleCloseModal } = useUserActions();
-    const user = findUserById(users, currentUserId);
+    const { currentUserId, isModalOpen } = useSelector((state) => state.users);
+    const { handleDeleteUser, handleCloseModal, handleFindUserById } =
+        useUserActions();
+    const user = handleFindUserById(currentUserId);
 
     return (
         <Modal open={isModalOpen} onClose={handleCloseModal}>

@@ -5,6 +5,7 @@ import { useUserActions } from '../../hooks/useUserActions';
 const User = ({ userData }) => {
     const { handleOpenEditUser, handleOpenDeleteModal } =
         useUserActions(userData);
+
     return (
         <>
             <TableRow

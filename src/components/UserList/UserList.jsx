@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     Button,
+    Box,
     CircularProgress,
     Paper,
     Table,
@@ -17,7 +18,7 @@ import User from '../User/User';
 
 const UserList = () => {
     const { users, isLoading, error } = useSelector((state) => state.users);
-    const { handleOpenAddUser, handleSortUsers } = useUserActions();
+    const { handleNavigateAdd, handleSortUsers } = useUserActions();
 
     if (isLoading) {
         return <CircularProgress />;
@@ -29,8 +30,15 @@ const UserList = () => {
 
     return (
         <>
-            <div>
-                <Button variant="contained" onClick={handleOpenAddUser}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginBottom: '40px',
+                }}
+            >
+                <Button variant="contained" onClick={handleNavigateAdd}>
                     Add user
                 </Button>
                 <Button
@@ -40,7 +48,7 @@ const UserList = () => {
                 >
                     Sort by Username
                 </Button>
-            </div>
+            </Box>
             <TableContainer component={Paper}>
                 <Table aria-label="users table">
                     <TableHead>

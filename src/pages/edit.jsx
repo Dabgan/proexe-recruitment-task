@@ -1,16 +1,13 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import Form from '../components/Form/Form';
 import { Button } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import { selectAllUsers, findUserById } from '../reducers/usersSlice';
+import { useParams } from 'react-router-dom';
+import { useUserActions } from '../hooks/useUserActions';
 
 const Edit = () => {
     const { id } = useParams();
-    const { users } = useSelector(selectAllUsers);
-    const user = findUserById(users, parseInt(id));
-
-    const navigate = useNavigate();
+    const { handleNavigateHome, handleFindUserById } = useUserActions();
+    const user = handleFindUserById(parseInt(id));
 
     if (!user) {
         return (
@@ -19,7 +16,7 @@ const Edit = () => {
                 <Button
                     variant="contained"
                     color="secondary"
-                    onClick={() => navigate('/')}
+                    onClick={handleNavigateHome}
                 >
                     Go back
                 </Button>

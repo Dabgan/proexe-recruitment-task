@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
     openModal,
@@ -6,13 +6,19 @@ import {
     sortUsers,
     fetchDeleteUser,
     closeModal,
+    selectAllUsers,
+    findUserById,
 } from '../reducers/usersSlice';
 
 export const useUserActions = (userData) => {
+    const { users } = useSelector(selectAllUsers);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleOpenAddUser = () => {
+    const handleNavigateHome = () => {
+        navigate('/');
+    };
+    const handleNavigateAdd = () => {
         navigate('/add');
     };
 
@@ -39,12 +45,18 @@ export const useUserActions = (userData) => {
         dispatch(closeModal());
     };
 
+    const handleFindUserById = (id) => {
+        return findUserById(users, id);
+    };
+
     return {
-        handleOpenAddUser,
+        handleNavigateHome,
+        handleNavigateAdd,
         handleOpenEditUser,
         handleOpenDeleteModal,
         handleSortUsers,
         handleDeleteUser,
         handleCloseModal,
+        handleFindUserById,
     };
 };
