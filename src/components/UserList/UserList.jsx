@@ -1,20 +1,19 @@
 import React from 'react';
 import {
+    Button,
+    CircularProgress,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    Paper,
-    CircularProgress,
-    Button,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { selectAllUsers } from '../../reducers/usersReducer';
-import User from '../User/User';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '../DeleteModal/DeleteModal';
+import User from '../User/User';
 
 const UserList = () => {
     const { users, isLoading, error } = useSelector((state) => state.users);
@@ -54,6 +53,11 @@ const UserList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
+                        {users.length === 0 && (
+                            <TableRow>
+                                <TableCell>No users found</TableCell>
+                            </TableRow>
+                        )}
                         {users &&
                             users.map((user) => (
                                 <User key={user.id} userData={user}></User>

@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
+import { Button, FormControl, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { FormControl, TextField, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { fetchAddUser } from '../../reducers/usersReducer';
+import { fetchAddUser, fetchEditUser } from '../../reducers/usersReducer';
 
-import './Form.css';
-// import { addUser } from '../redux/userSlice';
-
-const UserForm = ({ handleClose }) => {
+const Form = ({ userData }) => {
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
-    // const classes = useStyles();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState(userData?.name || '');
+    const [email, setEmail] = useState(userData?.email || '');
     const [emailError, setEmailError] = useState(false);
 
     const isEmailValid = (email) => {
@@ -22,18 +17,30 @@ const UserForm = ({ handleClose }) => {
         return emailRegex.test(email);
     };
 
+    const editUserInDatabase = async (id, updatedUser) => {
+        try {
+            dispatch(fetchEditUser({ id, updatedUser }));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleSave = () => {
         if (!isEmailValid(email)) {
             setEmailError('Please provide a valid email');
             return;
         }
-        dispatch(
-            fetchAddUser({
-                id: Math.floor(Math.random() * 1000),
-                name,
-                email,
-            })
-        );
+        if (userData?.id) {
+            editUserInDatabase(userData.id, { name, email });
+        } else {
+            dispatch(
+                fetchAddUser({
+                    id: Math.floor(Math.random() * 1000),
+                    name,
+                    email,
+                })
+            );
+        }
         navigate('/');
     };
 
@@ -47,16 +54,13 @@ const UserForm = ({ handleClose }) => {
                 id="name"
                 label="Name"
                 variant="outlined"
-                // className={}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
             />
             <TextField
-                // className={'form__control'}
                 id="email"
                 label="Email"
                 variant="outlined"
-                // className={}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 error={!!emailError}
@@ -65,7 +69,6 @@ const UserForm = ({ handleClose }) => {
             <Button
                 variant="contained"
                 color="primary"
-                // className={classes.button}
                 onClick={handleSave}
                 disabled={!name || !email}
             >
@@ -74,7 +77,6 @@ const UserForm = ({ handleClose }) => {
             <Button
                 variant="contained"
                 color="secondary"
-                // className={classes.button}
                 onClick={handleCancel}
             >
                 Cancel
@@ -83,4 +85,4 @@ const UserForm = ({ handleClose }) => {
     );
 };
 
-export default UserForm;
+export default Form;

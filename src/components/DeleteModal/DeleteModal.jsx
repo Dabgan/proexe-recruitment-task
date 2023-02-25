@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, TextField, Button, Box } from '@mui/material';
+import { Box, Button, Modal } from '@mui/material';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     closeModal,
-    fetchAddUser,
-    selectAllUsers,
-    fetchEditUser,
     fetchDeleteUser,
+    findUserById,
 } from '../../reducers/usersReducer';
 
 const style = {
@@ -23,7 +21,10 @@ const style = {
 };
 
 const DeleteModal = () => {
-    const { user, isModalOpen } = useSelector((state) => state.users);
+    const { currentUserId, isModalOpen, users } = useSelector(
+        (state) => state.users
+    );
+    const user = findUserById(users, currentUserId);
 
     const dispatch = useDispatch();
 

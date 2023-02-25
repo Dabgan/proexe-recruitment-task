@@ -1,25 +1,19 @@
 import React from 'react';
-import { TableCell, TableRow, Button } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-    fetchDeleteUser,
-    fetchEditUser,
-    openModal,
-    setUser,
-    selectAllUsers,
-} from '../../reducers/usersReducer';
+import { Button, TableCell, TableRow } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { openModal, setCurrentUserId } from '../../reducers/usersReducer';
 
 const User = ({ userData }) => {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.users);
+    const navigate = useNavigate();
 
     const handleEditUser = () => {
-        // dispatch(setUser(userData.id));
-        // dispatch(openModal());
-        // dispatch(editUserInDatabase(userData.id, updatedUser));
+        dispatch(setCurrentUserId(userData.id));
+        navigate(`/user/${userData.id}`);
     };
     const handleDeleteUser = () => {
-        dispatch(setUser(userData.id));
+        dispatch(setCurrentUserId(userData.id));
         dispatch(openModal());
     };
 

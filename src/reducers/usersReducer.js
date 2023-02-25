@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     users: [],
-    user: null,
+    currentUserId: null,
     isLoading: false,
     error: null,
     isModalOpen: false,
@@ -90,10 +90,10 @@ export const usersSlice = createSlice({
         },
         closeModal: (state) => {
             state.isModalOpen = false;
-            state.user = null;
+            state.currentUserId = null;
         },
-        setUser: (state, action) => {
-            state.user = state.users.find((user) => user.id === action.payload);
+        setCurrentUserId: (state, action) => {
+            state.currentUserId = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -126,25 +126,19 @@ export const usersSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(fetchEditUser.fulfilled, (state, action) => {
-                const userObj = state.users.find(
-                    (obj) => obj.id === action.payload.id
-                );
-                const userIndex = state.users.indexOf(userObj);
-
-                // state.users[userIndex] = {
-                //     ...state.users[userIndex],
-                //     ...action.meta.arg.updatedInfo,
-                // };
-
-                // state.isLoading = false;
-                // state.users.push(action.payload);
-                // state.error = null;
-                state.users.push({ name: 'test' });
-
-                // state.users[userIndex] = { name: 'test' };
-
-                console.log(state.users);
                 state.isLoading = false;
+                const updatedUser = action.meta.arg.updatedUser;
+                const updatedUserId = action.payload.id;
+                const changedUsers = state.users.map((user) => {
+                    if (user.id === updatedUserId) {
+                        return {
+                            ...user,
+                            ...updatedUser,
+                        };
+                    }
+                    return user;
+                });
+                state.users = changedUsers;
                 state.error = null;
             })
             .addCase(fetchEditUser.rejected, (state, action) => {
@@ -167,9 +161,20 @@ export const usersSlice = createSlice({
     },
 });
 
-export const { openModal, closeModal, setUser, getUser } = usersSlice.actions;
+export const {
+    openModal,
+    closeModal,
+    setCurrentUserId: setUser,
+    getUser,
+    setCurrentUserId,
+} = usersSlice.actions;
 
-// export const selectPostById = (state, userId) =>
-//     state.posts.posts.find((user) => user.id === userId);
+export const selectAllUsers = (state) => state.users;
+
+export const findUserById = (users, userId) => {
+    return users.find((user) => {
+        return user.id === userId;
+    });
+};
 
 export default usersSlice.reducer;
