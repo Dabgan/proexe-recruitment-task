@@ -10,11 +10,11 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { sortUsers } from '../../reducers/usersSlice';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import User from '../User/User';
-import { sortUsers } from '../../reducers/usersSlice';
 
 const UserList = () => {
     const { users, isLoading, error } = useSelector((state) => state.users);
