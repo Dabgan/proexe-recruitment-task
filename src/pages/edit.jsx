@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Form from '../components/Form/Form';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { selectAllUsers, findUserById } from '../reducers/usersReducer';
+import { selectAllUsers, findUserById } from '../reducers/usersSlice';
 
 const Edit = (props) => {
     const { id } = useParams();

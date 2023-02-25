@@ -6,6 +6,7 @@ const initialState = {
     isLoading: false,
     error: null,
     isModalOpen: false,
+    isAscending: true,
 };
 
 export const fetchUsers = createAsyncThunk('user/fetchUsers', async () => {
@@ -95,6 +96,16 @@ export const usersSlice = createSlice({
         setCurrentUserId: (state, action) => {
             state.currentUserId = action.payload;
         },
+        sortUsers: (state) => {
+            state.users.sort((a, b) => {
+                if (state.isAscending) {
+                    return a.username.localeCompare(b.username);
+                } else {
+                    return b.username.localeCompare(a.username);
+                }
+            });
+            state.isAscending = !state.isAscending;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -167,6 +178,7 @@ export const {
     setCurrentUserId: setUser,
     getUser,
     setCurrentUserId,
+    sortUsers,
 } = usersSlice.actions;
 
 export const selectAllUsers = (state) => state.users;

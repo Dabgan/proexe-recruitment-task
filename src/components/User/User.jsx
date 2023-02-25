@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, TableCell, TableRow } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { openModal, setCurrentUserId } from '../../reducers/usersReducer';
+import { openModal, setCurrentUserId } from '../../reducers/usersSlice';
 
 const User = ({ userData }) => {
     const dispatch = useDispatch();

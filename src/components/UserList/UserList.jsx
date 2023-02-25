@@ -10,14 +10,16 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import User from '../User/User';
+import { sortUsers } from '../../reducers/usersSlice';
 
 const UserList = () => {
     const { users, isLoading, error } = useSelector((state) => state.users);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     if (isLoading) {
         return <CircularProgress />;
@@ -26,6 +28,10 @@ const UserList = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
+
+    const handleSortUsers = () => {
+        dispatch(sortUsers());
+    };
 
     return (
         <>
@@ -37,6 +43,15 @@ const UserList = () => {
                     }}
                 >
                     Add user
+                </Button>
+                <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => {
+                        handleSortUsers();
+                    }}
+                >
+                    Sort by Username
                 </Button>
             </div>
             <TableContainer component={Paper}>

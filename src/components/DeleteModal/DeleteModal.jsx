@@ -6,7 +6,7 @@ import {
     closeModal,
     fetchDeleteUser,
     findUserById,
-} from '../../reducers/usersReducer';
+} from '../../reducers/usersSlice';
 
 const style = {
     position: 'absolute',

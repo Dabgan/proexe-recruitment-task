@@ -5,7 +5,7 @@ import Layout from './components/Layout/Layout';
 import Add from './pages/add';
 import Edit from './pages/edit';
 import Home from './pages/home';
-import { fetchUsers } from './reducers/usersReducer';
+import { fetchUsers } from './reducers/usersSlice';
 
 function App() {
     const dispatch = useDispatch();

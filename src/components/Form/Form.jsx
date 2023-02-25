@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, FormControl, TextField } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchAddUser, fetchEditUser } from '../../reducers/usersReducer';
+import { fetchAddUser, fetchEditUser } from '../../reducers/usersSlice';
 
 const Form = ({ userData }) => {
     const navigate = useNavigate();
