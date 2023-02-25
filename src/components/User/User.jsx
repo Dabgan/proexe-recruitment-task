@@ -1,21 +1,10 @@
 import React from 'react';
 import { Button, TableCell, TableRow } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { openModal, setCurrentUserId } from '../../reducers/usersSlice';
+import { useUserActions } from '../../hooks/useUserActions';
 
 const User = ({ userData }) => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    const handleEditUser = () => {
-        dispatch(setCurrentUserId(userData.id));
-        navigate(`/user/${userData.id}`);
-    };
-    const handleDeleteUser = () => {
-        dispatch(setCurrentUserId(userData.id));
-        dispatch(openModal());
-    };
+    const { handleOpenEditUser, handleOpenDeleteModal } =
+        useUserActions(userData);
 
     return (
         <>
@@ -38,7 +27,7 @@ const User = ({ userData }) => {
                     <Button
                         color="warning"
                         variant="contained"
-                        onClick={handleEditUser}
+                        onClick={handleOpenEditUser}
                     >
                         Edit
                     </Button>
@@ -47,7 +36,7 @@ const User = ({ userData }) => {
                     <Button
                         color="error"
                         variant="contained"
-                        onClick={handleDeleteUser}
+                        onClick={handleOpenDeleteModal}
                     >
                         Delete
                     </Button>

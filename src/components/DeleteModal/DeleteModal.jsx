@@ -1,12 +1,7 @@
 import { Box, Button, Modal } from '@mui/material';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {
-    closeModal,
-    fetchDeleteUser,
-    findUserById,
-} from '../../reducers/usersSlice';
+import { useSelector } from 'react-redux';
+import { useUserActions } from '../../hooks/useUserActions';
 
 const style = {
     position: 'absolute',
@@ -21,40 +16,37 @@ const style = {
 };
 
 const DeleteModal = () => {
-    const { currentUserId, isModalOpen, users } = useSelector(
-        (state) => state.users
-    );
-    const user = findUserById(users, currentUserId);
-
-    const dispatch = useDispatch();
-
-    const handleDeleteUser = () => {
-        dispatch(fetchDeleteUser(user.id));
-        dispatch(closeModal());
-    };
-
-    const handleCloseModal = () => {
-        dispatch(closeModal());
-    };
+    const { currentUserId, isModalOpen } = useSelector((state) => state.users);
+    const { handleDeleteUser, handleCloseModal, handleFindUserById } =
+        useUserActions();
+    const user = handleFindUserById(currentUserId);
 
     return (
-        <Modal open={isModalOpen} onClose={handleCloseModal} sx={style}>
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
             <Box sx={style}>
-                <h2>Are you sure you want to delete this user? {user?.name}</h2>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleDeleteUser}
+                <h2>Are you sure you want to delete {user?.name}?</h2>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}
                 >
-                    Delete
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleCloseModal}
-                >
-                    Cancel
-                </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleCloseModal}
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleDeleteUser(user.id)}
+                    >
+                        Delete
+                    </Button>
+                </Box>
             </Box>
         </Modal>
     );
