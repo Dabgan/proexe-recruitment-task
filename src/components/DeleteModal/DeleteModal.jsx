@@ -1,12 +1,8 @@
 import { Box, Button, Modal } from '@mui/material';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import {
-    closeModal,
-    fetchDeleteUser,
-    findUserById,
-} from '../../reducers/usersSlice';
+import { useSelector } from 'react-redux';
+import { useUserActions } from '../../hooks/useUserActions';
+import { findUserById } from '../../reducers/usersSlice';
 
 const style = {
     position: 'absolute',
@@ -24,18 +20,8 @@ const DeleteModal = () => {
     const { currentUserId, isModalOpen, users } = useSelector(
         (state) => state.users
     );
+    const { handleDeleteUser, handleCloseModal } = useUserActions();
     const user = findUserById(users, currentUserId);
-
-    const dispatch = useDispatch();
-
-    const handleDeleteUser = () => {
-        dispatch(fetchDeleteUser(user.id));
-        dispatch(closeModal());
-    };
-
-    const handleCloseModal = () => {
-        dispatch(closeModal());
-    };
 
     return (
         <Modal open={isModalOpen} onClose={handleCloseModal}>
@@ -50,17 +36,17 @@ const DeleteModal = () => {
                 >
                     <Button
                         variant="contained"
-                        color="primary"
-                        onClick={handleDeleteUser}
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        variant="contained"
                         color="secondary"
                         onClick={handleCloseModal}
                     >
                         Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleDeleteUser(user.id)}
+                    >
+                        Delete
                     </Button>
                 </Box>
             </Box>
