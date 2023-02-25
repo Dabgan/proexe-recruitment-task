@@ -1,52 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, FormControl, TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { fetchAddUser, fetchEditUser } from '../../reducers/usersSlice';
+import useUserForm from '../../hooks/useUserForm.js';
 
 const Form = ({ userData }) => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [name, setName] = useState(userData?.name || '');
-    const [email, setEmail] = useState(userData?.email || '');
-    const [emailError, setEmailError] = useState(false);
-
-    const isEmailValid = (email) => {
-        const emailRegex =
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
-        return emailRegex.test(email);
-    };
-
-    const editUserInDatabase = async (id, updatedUser) => {
-        try {
-            dispatch(fetchEditUser({ id, updatedUser }));
-        } catch (error) {
-            console.log('poszlo?');
-            console.error(error);
-        }
-    };
+    const {
+        name,
+        email,
+        emailError,
+        saveUser,
+        handleNameChange,
+        handleEmailChange,
+        handleCancel,
+    } = useUserForm(userData);
 
     const handleSave = () => {
-        if (!isEmailValid(email)) {
-            setEmailError('Please provide a valid email');
-            return;
-        }
-        if (userData?.id) {
-            editUserInDatabase(userData.id, { name, email });
-        } else {
-            dispatch(
-                fetchAddUser({
-                    id: Math.floor(Math.random() * 1000),
-                    name,
-                    email,
-                })
-            );
-        }
-        navigate('/');
-    };
-
-    const handleCancel = () => {
-        navigate('/');
+        saveUser({ id: userData?.id, name, email });
     };
 
     return (
@@ -56,14 +24,14 @@ const Form = ({ userData }) => {
                 label="Name"
                 variant="outlined"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={handleNameChange}
             />
             <TextField
                 id="email"
                 label="Email"
                 variant="outlined"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={handleEmailChange}
                 error={!!emailError}
                 helperText={emailError || ''}
             />

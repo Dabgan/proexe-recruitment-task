@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { selectAllUsers, findUserById } from '../reducers/usersSlice';
 
-const Edit = (props) => {
+const Edit = () => {
     const { id } = useParams();
     const { users } = useSelector(selectAllUsers);
     const user = findUserById(users, parseInt(id));
