@@ -80,7 +80,7 @@ export const usersSlice = createSlice({
                 state.isLoading = false;
                 const updatedUser = action.meta.arg.updatedUser;
                 const updatedUserId = action.payload.id;
-                const changedUsers = state.users.map((user) => {
+                state.users = state.users.map((user) => {
                     if (user.id === updatedUserId) {
                         return {
                             ...user,
@@ -89,10 +89,15 @@ export const usersSlice = createSlice({
                     }
                     return user;
                 });
-                state.users = changedUsers;
                 state.error = null;
             })
             .addCase(fetchDeleteUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.users = state.users.filter(
+                    (user) => user.id !== action.meta.arg
+                );
+            })
+            .addCase(fetchDeleteUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.users = state.users.filter(
                     (user) => user.id !== action.meta.arg
@@ -108,20 +113,42 @@ export const usersSlice = createSlice({
                 (action) => action.type.endsWith('/rejected'),
                 (state, action) => {
                     state.isLoading = false;
-                    state.error = action.error.message;
+                    // those two below scenarions for rejected actions are here because we are working
+                    // on custom test/api and normally it's throwing an error (in example because of deleting
+                    // user that doesn't exist on server). Here we ignore response error to show correct and
+                    // updated users list
+                    if (action.type.includes('deleteUser')) {
+                        state.isLoading = false;
+                        state.users = state.users.filter(
+                            (user) => user.id !== action.meta.arg
+                        );
+                        return;
+                    }
+                    if (action.type.includes('editUser')) {
+                        state.isLoading = false;
+                        const updatedUser = action.meta.arg.updatedUser;
+                        const updatedUserId = action.meta.arg.id;
+
+                        state.users = state.users.map((user) => {
+                            if (user.id === updatedUserId) {
+                                return {
+                                    ...user,
+                                    ...updatedUser,
+                                };
+                            }
+                            return user;
+                        });
+                        state.error = null;
+                    } else {
+                        state.error = action.error.message;
+                    }
                 }
             );
     },
 });
 
-export const {
-    openModal,
-    closeModal,
-    setCurrentUserId: setUser,
-    getUser,
-    setCurrentUserId,
-    sortUsers,
-} = usersSlice.actions;
+export const { openModal, closeModal, getUser, setCurrentUserId, sortUsers } =
+    usersSlice.actions;
 
 export const selectAllUsers = (state) => state.users;
 
