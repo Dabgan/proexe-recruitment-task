@@ -24,7 +24,3 @@ This is a React and Redux-based dashboard for user management. It includes the f
 ## Demo
 
 You can see a live demo of the project here: https://proexe-gabriel-daniluk.netlify.app/
-
-## Credits
-
-This project was created as a recruitment task for a Frontend React Developer position at Proexe.
